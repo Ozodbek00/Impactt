@@ -1,3 +1,4 @@
+using Impactt.Api.Middlewares;
 using Impactt.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
+
+app.UseMiddleware<ImpacttMiddleware>();
 
 app.MapControllers();
 

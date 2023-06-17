@@ -257,7 +257,11 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\Ozodbekkkkk\\Codes\\Impactt\\Impactt.Domain\\Impactt.Domain.csproj": {
+                "projectPath": "D:\\Ozodbekkkkk\\Codes\\Impactt\\Impactt.Domain\\Impactt.Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

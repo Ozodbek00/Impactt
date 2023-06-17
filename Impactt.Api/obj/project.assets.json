@@ -458,6 +458,9 @@
       "Impactt.Service/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Impactt.Domain": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Impactt.Service.dll": {}
         },

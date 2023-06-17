@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "Impactt.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Impactt.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Impactt.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Impactt.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Impactt.Domain/Impactt.Domain.csproj",
+      "msbuildProject": "../Impactt.Domain/Impactt.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "Impactt.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\O'tkirbek\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Ozodbekkkkk\\Codes\\Impactt\\Impactt.Domain\\Impactt.Domain.csproj": {
+              "projectPath": "D:\\Ozodbekkkkk\\Codes\\Impactt\\Impactt.Domain\\Impactt.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
