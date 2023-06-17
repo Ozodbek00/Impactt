@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Impactt.Api", "Impactt.Api\Impactt.Api.csproj", "{D27C00DB-A6D6-4FD9-B0F6-9EBA2774B3C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Impactt.Api", "Impactt.Api\Impactt.Api.csproj", "{D27C00DB-A6D6-4FD9-B0F6-9EBA2774B3C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Impactt.Domain", "Impactt.Domain\Impactt.Domain.csproj", "{2E8ED4BD-DAAF-4A69-B541-0CF1D1D4D312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Impactt.Domain", "Impactt.Domain\Impactt.Domain.csproj", "{2E8ED4BD-DAAF-4A69-B541-0CF1D1D4D312}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Impactt.Data", "Impactt.Data\Impactt.Data.csproj", "{6C95DF3A-8079-4724-9B36-5AB348D38B2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Impactt.Data", "Impactt.Data\Impactt.Data.csproj", "{6C95DF3A-8079-4724-9B36-5AB348D38B2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Impactt.Service", "Impactt.Service\Impactt.Service.csproj", "{BE197547-B693-454E-B568-0516B357F013}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Impactt.Service", "Impactt.Service\Impactt.Service.csproj", "{BE197547-B693-454E-B568-0516B357F013}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0A6B1667-B0EC-45F8-A558-2634B173EF49}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
