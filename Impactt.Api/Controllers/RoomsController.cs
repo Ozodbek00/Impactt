@@ -47,9 +47,10 @@ namespace Impactt.Api.Controllers
         /// Get all rooms with pagination.
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync([FromQuery] int pageIndex, int pageSize)
+        public async Task<IActionResult> GetAllAsync([FromQuery] string search, byte type, int pageIndex, int pageSize)
         {
-            return Ok(await roomService.GetAllAsync(pageIndex, pageSize));
+            return Ok(await roomService.GetAllAsync(pageIndex, pageSize, 
+                                expression: r => r.Name.Equals(search) && (byte)r.Type == type));
         }
 
         /// <summary>

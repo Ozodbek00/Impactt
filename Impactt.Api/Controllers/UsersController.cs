@@ -56,7 +56,9 @@ namespace Impactt.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(long id)
         {
-            return Ok(userService.DeleteAsync(id));
+            await userService.DeleteAsync(id);
+
+            return Ok();
         }
     }
 }
