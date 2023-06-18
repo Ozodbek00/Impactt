@@ -11,6 +11,8 @@ namespace Impactt.Service.Mappers
             CreateMap<User, UserDTO>().ReverseMap();
 
             CreateMap<Room, RoomDTO>().ReverseMap();
+
+            CreateMap<UserRoomBook, UserRoomBookDTO>().ReverseMap();
         }
     }
 }

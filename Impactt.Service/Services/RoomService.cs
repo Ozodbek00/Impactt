@@ -6,23 +6,25 @@ using Impactt.Service.DTOs;
 using Impactt.Service.Exceptions;
 using Impactt.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Impactt.Service.Services
 {
     public class RoomService : IRoomService
     {
         private readonly IRepository<Room> repository;
+        private readonly IRepository<User> userRepo;
+        private readonly IRepository<UserRoomBook> userBookRepo;
         private readonly IMapper mapper;
 
-        public RoomService(IRepository<Room> repository, IMapper mapper)
+        public RoomService(IRepository<Room> repository,
+                           IRepository<User> userRepo,
+                           IRepository<UserRoomBook> userBookRepo, 
+                           IMapper mapper)
         {
             this.repository = repository;
+            this.userRepo = userRepo;
+            this.userBookRepo = userBookRepo;
             this.mapper = mapper;
         }
 
@@ -35,7 +37,7 @@ namespace Impactt.Service.Services
                   s.Name.Equals(roomDTO.Name));
 
             if (room is not null)
-                throw new ImpacttException(400, "Branch with this name exists");
+                throw new ImpacttException(400, "Room with this name exists");
 
             Room mappedRoom = mapper.Map<Room>(roomDTO);
             mappedRoom.CreatedAt = DateTime.UtcNow;
@@ -46,17 +48,98 @@ namespace Impactt.Service.Services
         }
 
         /// <summary>
+        /// Get room by id and date.
+        /// </summary>
+        public async Task<UserRoomBookDTO[]> GetRoomFreeIntervalsAsync(long roomId, DateTime date)
+        {
+            var room = await repository.GetAsync(expression: s => s.Id == roomId);
+
+            if (room is null)
+                throw new ImpacttException(404, "Room with this name does not exist");
+
+            if (date < DateTime.UtcNow)
+                date = DateTime.UtcNow;
+
+            var bookings = userBookRepo.GetAll(1, 50, 
+                expression: u => u.RoomId == roomId && 
+                            u.StartAt.Date.Year == date.Year && 
+                            u.StartAt.Date.Month == date.Month &&
+                            u.StartAt.Date.Day == date.Day).OrderBy(b => b.StartAt);
+
+            if (!bookings.Any())
+                return new UserRoomBookDTO[] 
+                {
+                    new UserRoomBookDTO 
+                    {
+                        StartAt = new DateTime(date.Year, date.Month, date.Day, 9, 0, 0),
+                        EndAt = new DateTime(date.Year, date.Month, date.Day, 23, 0, 0)
+                    }
+                };
+
+            DateTime start = new(date.Year, date.Month, date.Day, 9, 0, 0);
+            List<UserRoomBookDTO> intervals = new();
+            //9:00
+            //9:00-10:00, 13:00-15:00
+            foreach (var booking in bookings)
+            {
+                if (booking.StartAt.Subtract(date).Minutes <= 0)
+                    start = booking.EndAt;
+                else
+                {
+                    intervals.Add(new UserRoomBookDTO() { StartAt = start, EndAt = booking.StartAt });
+                }
+            }
+
+            var last = intervals.LastOrDefault();
+
+            if (last == null)
+            {
+                intervals.Add(new UserRoomBookDTO()
+                {
+                    StartAt = start,
+                    EndAt = new DateTime(date.Year, date.Month, date.Day, 23, 0, 0)
+                });
+            }
+            else if (last.EndAt.Hour < 23)
+            {
+                intervals.Add(new UserRoomBookDTO()
+                {
+                    StartAt = start,
+                    EndAt = new DateTime(date.Year, date.Month, date.Day, 23, 0, 0)
+                });
+            }
+
+            return intervals.ToArray();
+        }
+
+        /// <summary>
+        /// Book room.
+        /// </summary>
+        public async Task BookRoomAsync(long roomId, ReservationDTO reservationDTO)
+        {
+            await GetAsync(expression: r => r.Id == roomId);
+
+            var intervals = (await GetRoomFreeIntervalsAsync(roomId, reservationDTO.StartAt))
+                   .Any(i => i.StartAt <= reservationDTO.StartAt && i.EndAt >= reservationDTO.EndAt);
+
+            if (!intervals)
+                throw new ImpacttException(410, "uzr, siz tanlagan vaqtda xona band");
+
+            await userBookRepo.AddAsync(mapper.Map<UserRoomBook>(reservationDTO));
+        }
+
+        /// <summary>
         /// Update room.
         /// </summary>
         public async Task<RoomDTO> UpdateAsync(long id, RoomDTO roomDTO)
         {
-            var branch = await repository.GetAsync(expression: s => s.Id == id);
+            var room = await repository.GetAsync(expression: s => s.Id == id);
 
-            if (branch is null)
-                throw new ImpacttException(404, "Branch with this name does not exist");
+            if (room is null)
+                throw new ImpacttException(404, "Room with this name does not exist");
 
             Room mappedRoom = mapper.Map<Room>(roomDTO);
-            mappedRoom.CreatedAt = branch.CreatedAt;
+            mappedRoom.CreatedAt = room.CreatedAt;
             mappedRoom.UpdatedAt = DateTime.UtcNow;
 
             await repository.UpdateAsync(mappedRoom);
@@ -72,7 +155,7 @@ namespace Impactt.Service.Services
             var room = await repository.GetAsync(expression: s => s.Id == id);
 
             if (room == null)
-                throw new ImpacttException(404, "Branch not found");
+                throw new ImpacttException(404, "Room not found");
 
             await repository.DeleteAsync(room);
         }
@@ -85,7 +168,7 @@ namespace Impactt.Service.Services
             var room = await repository.GetAsync(expression);
 
             if (room == null)
-                throw new ImpacttException(404, "Branch not found");
+                throw new ImpacttException(404, "Room not found");
 
             return mapper.Map<RoomDTO>(room);
         }

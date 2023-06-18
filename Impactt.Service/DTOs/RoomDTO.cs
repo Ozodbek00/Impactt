@@ -4,6 +4,8 @@ namespace Impactt.Service.DTOs
 {
     public class RoomDTO
     {
+        public long Id { get; set; }
+
         public string Name { get; set; }
 
         public RoomType Type { get; set; }

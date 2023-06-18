@@ -7,6 +7,16 @@ namespace Impactt.Service.Interfaces
     public interface IRoomService
     {
         /// <summary>
+        /// Get room by id and date.
+        /// </summary>
+        Task<UserRoomBookDTO[]> GetRoomFreeIntervalsAsync(long  roomId, DateTime date);
+
+        /// <summary>
+        /// Book room.
+        /// </summary>
+        Task BookRoomAsync(long roomId, ReservationDTO reservationDTO);
+
+        /// <summary>
         /// Create room.
         /// </summary>
         Task<RoomDTO> CreateAsync(RoomDTO roomDTO);
