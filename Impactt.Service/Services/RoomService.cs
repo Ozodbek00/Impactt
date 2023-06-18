@@ -82,12 +82,14 @@ namespace Impactt.Service.Services
             //9:00-10:00, 13:00-15:00
             foreach (var booking in bookings)
             {
-                if (booking.StartAt.Subtract(date).Minutes <= 0)
+                if (booking.StartAt <= date)
                     start = booking.EndAt;
                 else
                 {
                     intervals.Add(new UserRoomBookDTO() { StartAt = start, EndAt = booking.StartAt });
                 }
+
+                start = booking.EndAt;
             }
 
             var last = intervals.LastOrDefault();
@@ -119,13 +121,28 @@ namespace Impactt.Service.Services
         {
             await GetAsync(expression: r => r.Id == roomId);
 
+            var user = await userRepo.GetAsync(expression: u
+                    => string.Concat(u.FirstName, " ", u.LastName).Equals(reservationDTO.Booker.Name));
+
+            if (user == null)
+                throw new ImpacttException(404, "Bunday inson ro'yxatda yo'q");
+
             var intervals = (await GetRoomFreeIntervalsAsync(roomId, reservationDTO.StartAt))
                    .Any(i => i.StartAt <= reservationDTO.StartAt && i.EndAt >= reservationDTO.EndAt);
 
             if (!intervals)
-                throw new ImpacttException(410, "uzr, siz tanlagan vaqtda xona band");
+                throw new ImpacttException(410, "Uzr, siz tanlagan vaqtda xona band");
 
-            await userBookRepo.AddAsync(mapper.Map<UserRoomBook>(reservationDTO));
+            UserRoomBook roomBook = new()
+            {
+                RoomId = roomId,
+                UserId = user.Id,
+                StartAt = reservationDTO.StartAt,
+                EndAt = reservationDTO.EndAt,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await userBookRepo.AddAsync(roomBook);
         }
 
         /// <summary>

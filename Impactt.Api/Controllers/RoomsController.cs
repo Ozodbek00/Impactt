@@ -29,7 +29,9 @@ namespace Impactt.Api.Controllers
         [HttpPost("{id}/book")]
         public async Task<IActionResult> BookRoomAsync([FromRoute] long id, ReservationDTO reservationDTO)
         {
-            return Ok(roomService.BookRoomAsync(id, reservationDTO));
+            await roomService.BookRoomAsync(id, reservationDTO);
+
+            return Ok();
         }
 
         /// <summary>
@@ -74,7 +76,9 @@ namespace Impactt.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(long id)
         {
-            return Ok(roomService.DeleteAsync(id));
+            await roomService.DeleteAsync(id);
+
+            return Ok();
         }
     }
 }
