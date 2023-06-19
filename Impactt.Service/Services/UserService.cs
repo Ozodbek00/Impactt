@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace Impactt.Service.Services
 {
-    public class UserService : IUserService
+    public sealed class UserService : IUserService
     {
         private readonly IRepository<User> repository;
         private readonly IMapper mapper;
@@ -25,7 +25,7 @@ namespace Impactt.Service.Services
         /// <summary>
         /// Register user.
         /// </summary>
-        public async Task<UserDTO> CreateAsync(UserDTO userDTO)
+        public async Task<UserDTO> CreateAsync(UserForCreationDTO userDTO)
         {
             var user = await repository.GetAsync(expression: s => s.Email.Equals(userDTO.Email));
 
@@ -37,7 +37,7 @@ namespace Impactt.Service.Services
                                       s.Password.Equals(userDTO.Password.Encrypt()));
 
             if (validUser is not null)
-                throw new ImpacttException(400, "Invalid password or username");
+                throw new ImpacttException(400, "Invalid password or email address");
 
             User mappedUser = mapper.Map<User>(userDTO);
             mappedUser.CreatedAt = DateTime.UtcNow;
@@ -45,7 +45,7 @@ namespace Impactt.Service.Services
 
             await repository.AddAsync(mappedUser);
 
-            return userDTO;
+            return mapper.Map<UserDTO>(mappedUser);
         }
 
         /// <summary>
@@ -86,23 +86,29 @@ namespace Impactt.Service.Services
         /// <summary>
         /// Update user.
         /// </summary>
-        public async Task<UserDTO> UpdateAsync(long id, UserDTO userDTO)
+        public async Task<UserDTO> UpdateAsync(long id, UserForCreationDTO userDTO)
         {
             var user = await repository.GetAsync(expression: s => s.Id == id);
 
             if (user is null)
                 throw new ImpacttException(404, "User not found");
 
-            var passUser = await repository.GetAsync(u => u.Password.Equals(userDTO.Password.Encrypt()));
+            var passUser = await repository.GetAsync(expression: s =>
+                                      (s.Email.Equals(userDTO.Email) ||
+                                      s.Password.Equals(userDTO.Password.Encrypt())) &&
+                                      s.Id != id);
 
-            User mappedUser = mapper.Map<User>(userDTO);
+            if (passUser != null)
+                throw new ImpacttException(400, "Invalid password or email address");
+
+            User mappedUser = mapper.Map(userDTO, user);
             mappedUser.CreatedAt = user.CreatedAt;
             mappedUser.UpdatedAt = DateTime.UtcNow;
             mappedUser.Password = mappedUser.Password.Encrypt();
 
             await repository.UpdateAsync(mappedUser);
 
-            return userDTO;
+            return mapper.Map<UserDTO>(mappedUser);
         }
     }
 }

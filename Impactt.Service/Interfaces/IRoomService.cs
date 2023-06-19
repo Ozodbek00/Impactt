@@ -19,12 +19,12 @@ namespace Impactt.Service.Interfaces
         /// <summary>
         /// Create room.
         /// </summary>
-        Task<RoomDTO> CreateAsync(RoomDTO roomDTO);
+        Task<RoomDTO> CreateAsync(RoomForCreationDto roomDTO);
 
         /// <summary>
         /// Update room.
         /// </summary>
-        Task<RoomDTO> UpdateAsync(long id, RoomDTO roomDTO);
+        Task<RoomDTO> UpdateAsync(long id, RoomForCreationDto roomDTO);
 
         /// <summary>
         /// Delete room.

@@ -1,6 +1,6 @@
 ﻿namespace Impactt.Service.DTOs
 {
-    public class ReservationDTO
+    public sealed class ReservationDTO
     {
         public BookerDTO Booker { get; set; }
 

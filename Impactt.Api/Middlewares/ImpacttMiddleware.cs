@@ -2,7 +2,7 @@
 
 namespace Impactt.Api.Middlewares
 {
-    public class ImpacttMiddleware
+    public sealed class ImpacttMiddleware
     {
         private readonly RequestDelegate _next;
 

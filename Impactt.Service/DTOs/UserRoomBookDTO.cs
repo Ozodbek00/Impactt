@@ -1,6 +1,6 @@
 ﻿namespace Impactt.Service.DTOs
 {
-    public class UserRoomBookDTO
+    public sealed class UserRoomBookDTO
     {
         public DateTime StartAt { get; set; }
 

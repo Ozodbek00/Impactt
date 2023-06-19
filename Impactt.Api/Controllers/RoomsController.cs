@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Impactt.Api.Controllers
 {
     [ApiController, Route("api/[controller]")]
-    public class RoomsController : ControllerBase
+    public sealed class RoomsController : ControllerBase
     {
         private readonly IRoomService roomService;
 
@@ -38,7 +38,7 @@ namespace Impactt.Api.Controllers
         /// Create roomDto.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(RoomDTO roomDto)
+        public async Task<IActionResult> CreateAsync(RoomForCreationDto roomDto)
         {
             return Ok(await roomService.CreateAsync(roomDto));
         }
@@ -54,6 +54,15 @@ namespace Impactt.Api.Controllers
         }
 
         /// <summary>
+        /// Get all rooms with pagination.
+        /// </summary>
+        [HttpGet("only-pagination")]
+        public async Task<IActionResult> GetAllOnlyPaginationAsync([FromQuery] int pageIndex, int pageSize)
+        {
+            return Ok(await roomService.GetAllAsync(pageIndex, pageSize));
+        }
+
+        /// <summary>
         /// Get room by id.
         /// </summary>
         [HttpGet("{id}")]
@@ -66,7 +75,7 @@ namespace Impactt.Api.Controllers
         /// Update room by id.
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(long id, RoomDTO roomDto)
+        public async Task<IActionResult> UpdateAsync(long id, RoomForCreationDto roomDto)
         {
             return Ok(await roomService.UpdateAsync(id, roomDto));
         }
