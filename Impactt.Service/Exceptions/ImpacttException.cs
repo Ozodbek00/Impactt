@@ -1,6 +1,6 @@
 ﻿namespace Impactt.Service.Exceptions
 {
-    public class ImpacttException : Exception
+    public sealed class ImpacttException : Exception
     {
         public int Code { get; set; }
 

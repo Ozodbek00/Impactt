@@ -10,12 +10,12 @@ namespace Impactt.Service.Interfaces
         /// <summary>
         /// Register user.
         /// </summary>
-        Task<UserDTO> CreateAsync(UserDTO userDTO);
+        Task<UserDTO> CreateAsync(UserForCreationDTO userDTO);
 
         /// <summary>
         /// Update user.
         /// </summary>
-        Task<UserDTO> UpdateAsync(long id, UserDTO userDTO);
+        Task<UserDTO> UpdateAsync(long id, UserForCreationDTO userDTO);
 
         /// <summary>
         /// Delete user.

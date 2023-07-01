@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace Impactt.Service.Services
 {
-    public class RoomService : IRoomService
+    public sealed class RoomService : IRoomService
     {
         private readonly IRepository<Room> repository;
         private readonly IRepository<User> userRepo;
@@ -31,7 +31,7 @@ namespace Impactt.Service.Services
         /// <summary>
         /// Create room.
         /// </summary>
-        public async Task<RoomDTO> CreateAsync(RoomDTO roomDTO)
+        public async Task<RoomDTO> CreateAsync(RoomForCreationDto roomDTO)
         {
             var room = await repository.GetAsync(expression: s =>
                   s.Name.Equals(roomDTO.Name));
@@ -44,7 +44,7 @@ namespace Impactt.Service.Services
 
             await repository.AddAsync(mappedRoom);
 
-            return roomDTO;
+            return mapper.Map<RoomDTO>(mappedRoom);
         }
 
         /// <summary>
@@ -78,8 +78,7 @@ namespace Impactt.Service.Services
 
             DateTime start = new(date.Year, date.Month, date.Day, 9, 0, 0);
             List<UserRoomBookDTO> intervals = new();
-            //9:00
-            //9:00-10:00, 13:00-15:00
+
             foreach (var booking in bookings)
             {
                 if (booking.StartAt <= date)
@@ -148,20 +147,20 @@ namespace Impactt.Service.Services
         /// <summary>
         /// Update room.
         /// </summary>
-        public async Task<RoomDTO> UpdateAsync(long id, RoomDTO roomDTO)
+        public async Task<RoomDTO> UpdateAsync(long id, RoomForCreationDto roomDTO)
         {
             var room = await repository.GetAsync(expression: s => s.Id == id);
 
             if (room is null)
                 throw new ImpacttException(404, "Room with this name does not exist");
 
-            Room mappedRoom = mapper.Map<Room>(roomDTO);
+            Room mappedRoom = mapper.Map(roomDTO, room);
             mappedRoom.CreatedAt = room.CreatedAt;
             mappedRoom.UpdatedAt = DateTime.UtcNow;
 
             await repository.UpdateAsync(mappedRoom);
 
-            return roomDTO;
+            return mapper.Map<RoomDTO>(mappedRoom);
         }
 
         /// <summary>

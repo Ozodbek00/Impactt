@@ -2,10 +2,8 @@
 
 namespace Impactt.Service.DTOs
 {
-    public sealed class RoomDTO
+    public sealed class RoomForCreationDto
     {
-        public long Id { get; set; }
-
         public string Name { get; set; }
 
         public RoomType Type { get; set; }

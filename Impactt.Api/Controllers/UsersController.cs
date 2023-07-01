@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Impactt.Api.Controllers
 {
     [ApiController, Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public sealed class UsersController : ControllerBase
     {
         private readonly IUserService userService;
 
@@ -18,7 +18,7 @@ namespace Impactt.Api.Controllers
         /// Register user.
         /// </summary>
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync(UserDTO dto)
+        public async Task<IActionResult> RegisterAsync(UserForCreationDTO dto)
         {
             return Ok(await userService.CreateAsync(dto));
         }
@@ -45,7 +45,7 @@ namespace Impactt.Api.Controllers
         /// Update user by id.
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(long id, UserDTO userDto)
+        public async Task<IActionResult> UpdateAsync(long id, UserForCreationDTO userDto)
         {
             return Ok(await userService.UpdateAsync(id, userDto));
         }

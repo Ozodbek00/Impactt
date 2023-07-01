@@ -12,13 +12,16 @@ namespace Impactt.Data.Interfaces
         /// <summary>
         /// Get entities with pagination.
         /// </summary>
-        IQueryable<TSource> GetAll(int pageIndex, int pageSize, Expression<Func<TSource, bool>> expression = null, string[] includes = null, bool isTracking = true);
-        
+        IQueryable<TSource> GetAll(int pageIndex, int pageSize, 
+            Expression<Func<TSource, bool>> expression = null, 
+            string[] includes = null, bool isTracking = true);
+
         /// <summary>
         /// Get entity from db by condition.
         /// </summary>
-        Task<TSource> GetAsync(Expression<Func<TSource, bool>> expression, string[] includes = null);
-        
+        Task<TSource> GetAsync(Expression<Func<TSource, bool>> expression,
+                                                        string[] includes = null);
+
         /// <summary>
         /// Update entity.
         /// </summary>
